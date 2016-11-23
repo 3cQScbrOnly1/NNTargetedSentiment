@@ -56,16 +56,59 @@ public:
 	}
 
 public:
-	inline void initial(ModelParams& model_params, HyperParams& hyper_params) {
+	inline void initial(ModelParams& model_params, HyperParams& hyper_params, AlignedMemoryPool *mem = NULL) {
 		for (int idx = 0; idx < _word_inputs.size(); idx++)
+		{
 			_word_inputs[idx].setParam(&model_params.words);
-		_pooling_concat_zero.val = Mat::Zero(hyper_params.hiddenSize * 4, 1);
-		_word_window.setContext(hyper_params.wordContext);
-		_rnn_left.setParam(&model_params.rnn_layer, hyper_params.dropOut, true);
-		_rnn_right.setParam(&model_params.rnn_layer, hyper_params.dropOut, false);
+			_word_inputs[idx].init(hyper_params.wordDim, hyper_params.dropOut, mem);
+			_bi_rnn_concat[idx].init(hyper_params.rnnHiddenSize * 2, hyper_params.dropOut, mem);
+		}
+		_pooling_concat_zero.init(hyper_params.hiddenSize * 4, -1, mem);
+		_word_window.init(hyper_params.hiddenSize, hyper_params.wordContext, mem);
+		_rnn_left.init(&model_params.rnn_layer, hyper_params.dropOut, true, mem);
+		_rnn_right.init(&model_params.rnn_layer, hyper_params.dropOut, false, mem);
 		for (int idx = 0; idx < _hidden.size(); idx++)
+		{
 			_hidden[idx].setParam(&model_params.hidden_layer);
+			_hidden[idx].init(hyper_params.hiddenSize, hyper_params.dropOut, mem);
+		}
+		_left_max_pooling.setParam(hyper_params.hiddenSize);
+		_left_min_pooling.setParam(hyper_params.hiddenSize);
+		_left_avg_pooling.setParam(hyper_params.hiddenSize);
+		_left_std_pooling.setParam(hyper_params.hiddenSize);
+		_left_max_pooling.init(hyper_params.hiddenSize, -1, mem);
+		_left_min_pooling.init(hyper_params.hiddenSize, -1, mem);
+		_left_avg_pooling.init(hyper_params.hiddenSize, -1, mem);
+		_left_std_pooling.init(hyper_params.hiddenSize, -1, mem);
+
+		_left_pooling_concat.init(hyper_params.hiddenSize * 4, -1, mem);
+
+		_right_max_pooling.setParam(hyper_params.hiddenSize);
+		_right_min_pooling.setParam(hyper_params.hiddenSize);
+		_right_avg_pooling.setParam(hyper_params.hiddenSize);
+		_right_std_pooling.setParam(hyper_params.hiddenSize);
+		_right_max_pooling.init(hyper_params.hiddenSize, -1, mem);
+		_right_min_pooling.init(hyper_params.hiddenSize, -1, mem);
+		_right_avg_pooling.init(hyper_params.hiddenSize, -1, mem);
+		_right_std_pooling.init(hyper_params.hiddenSize, -1, mem);
+
+		_right_pooling_concat.init(hyper_params.hiddenSize * 4, -1, mem);
+
+		_target_max_pooling.setParam(hyper_params.hiddenSize);
+		_target_min_pooling.setParam(hyper_params.hiddenSize);
+		_target_avg_pooling.setParam(hyper_params.hiddenSize);
+		_target_std_pooling.setParam(hyper_params.hiddenSize);
+		_target_max_pooling.init(hyper_params.hiddenSize, -1, mem);
+		_target_min_pooling.init(hyper_params.hiddenSize, -1, mem);
+		_target_avg_pooling.init(hyper_params.hiddenSize, -1, mem);
+		_target_std_pooling.init(hyper_params.hiddenSize, -1, mem);
+
+		_target_pooling_concat.init(hyper_params.hiddenSize * 4, -1, mem);
+
+		_concat.init(hyper_params.hiddenSize * 4 * 3, -1, mem);
+
 		_output.setParam(&model_params.olayer_linear);
+		_output.init(hyper_params.labelSize, hyper_params.dropOut, mem);
 	}
 
 public:
