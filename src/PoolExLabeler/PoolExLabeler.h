@@ -35,7 +35,7 @@ public:
   Driver m_driver;
 
 public:
-  Labeler();
+  Labeler(int memsize);
   virtual ~Labeler();
 
 public:

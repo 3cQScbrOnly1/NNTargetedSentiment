@@ -49,9 +49,9 @@ public:
 	}
 
 	void exportCheckGradParams(CheckGrad& checkgrad) {
-		checkgrad.add(&(grnn_layer._rnn.W1), "rnn_layer._rnn.W1");
-		checkgrad.add(&(grnn_layer._rnn.W2), "rnn_layer._rnn.W2");
-		checkgrad.add(&(grnn_layer._rnn.b), "rnn_layer._rnn.b");
+		checkgrad.add(&(grnn_layer._rnn.W1), "grnn_layer._rnn.W1");
+		checkgrad.add(&(grnn_layer._rnn.W2), "grnn_layer._rnn.W2");
+		checkgrad.add(&(grnn_layer._rnn.b), "grnn_layer._rnn.b");
 		checkgrad.add(&(represent_transform_layer.W), "represent_transform_layer.W");
 		checkgrad.add(&(arg_layer._update_left_param.W1), "arg_layer._update_left.W1");
 		checkgrad.add(&(arg_layer._update_left_param.W2), "arg_layer._update_left.W2");

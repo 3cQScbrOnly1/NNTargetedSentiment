@@ -46,18 +46,18 @@ public:
 
 	void exportCheckGradParams(CheckGrad& checkgrad) {
 		checkgrad.add(&(represent_transform_layer.W), "represent_transform_layer.W");
-		checkgrad.add(&(arg_layer._update_left.W1), "arg_layer._update_left.W1");
-		checkgrad.add(&(arg_layer._update_left.W2), "arg_layer._update_left.W2");
-		checkgrad.add(&(arg_layer._update_right.W1), "arg_layer._update_right.W1");
-		checkgrad.add(&(arg_layer._update_right.W2), "arg_layer._update_right.W2");
-		checkgrad.add(&(arg_layer._reset_left.W1), "arg_layer._reset_left.W1");
-		checkgrad.add(&(arg_layer._reset_left.W2), "arg_layer._reset_left.W2");
-		checkgrad.add(&(arg_layer._reset_right.W1), "arg_layer._reset_right.W1");
-		checkgrad.add(&(arg_layer._reset_right.W2), "arg_layer._reset_right.W2");
-		checkgrad.add(&(arg_layer._update_tilde.W1), "arg_layer._update_tilde.W1");
-		checkgrad.add(&(arg_layer._update_tilde.W2), "arg_layer._update_tilde.W2");
-		checkgrad.add(&(arg_layer._recursive_tilde.W1), "arg_layer._recursive_tilde.W1");
-		checkgrad.add(&(arg_layer._recursive_tilde.W2), "arg_layer._recursive_tilde.W2");
+		checkgrad.add(&(arg_layer._update_left_param.W1), "arg_layer._update_left.W1");
+		checkgrad.add(&(arg_layer._update_left_param.W2), "arg_layer._update_left.W2");
+		checkgrad.add(&(arg_layer._update_right_param.W1), "arg_layer._update_right.W1");
+		checkgrad.add(&(arg_layer._update_right_param.W2), "arg_layer._update_right.W2");
+		checkgrad.add(&(arg_layer._reset_left_param.W1), "arg_layer._reset_left.W1");
+		checkgrad.add(&(arg_layer._reset_left_param.W2), "arg_layer._reset_left.W2");
+		checkgrad.add(&(arg_layer._reset_right_param.W1), "arg_layer._reset_right.W1");
+		checkgrad.add(&(arg_layer._reset_right_param.W2), "arg_layer._reset_right.W2");
+		checkgrad.add(&(arg_layer._update_tilde_param.W1), "arg_layer._update_tilde.W1");
+		checkgrad.add(&(arg_layer._update_tilde_param.W2), "arg_layer._update_tilde.W2");
+		checkgrad.add(&(arg_layer._recursive_tilde_param.W1), "arg_layer._recursive_tilde.W1");
+		checkgrad.add(&(arg_layer._recursive_tilde_param.W2), "arg_layer._recursive_tilde.W2");
 		checkgrad.add(&(olayer_linear.W), "olayer_linear.W");
 	}
 

@@ -2,7 +2,7 @@
 
 #include "Argument_helper.h"
 
-Labeler::Labeler() {
+Labeler::Labeler(int memsize) :m_driver(memsize){
   // TODO Auto-generated constructor stub
 	srand(0);
 }
@@ -442,6 +442,7 @@ int main(int argc, char* argv[]) {
   std::string outputFile = "";
   std::string sentiFile = "";
   bool bTrain = false;
+  int memsize = 0;
   dsr::Argument_helper ah;
 
   ah.new_flag("l", "learn", "train or test", bTrain);
@@ -452,10 +453,13 @@ int main(int argc, char* argv[]) {
   ah.new_named_string("model", "modelFile", "named_string", "model file, must when training and testing", modelFile);
   ah.new_named_string("option", "optionFile", "named_string", "option file to train a model, optional when training", optionFile);
   ah.new_named_string("output", "outputFile", "named_string", "output file to test, must when testing", outputFile);
+  ah.new_named_int("memsize", "memorySize", "named_int", "This argument decides the size of static memory allocation", memsize);
 
   ah.process(argc, argv);
 
-  Labeler tagger;
+  if (memsize < 0)
+	  memsize = 0;
+  Labeler tagger(memsize);
   if (bTrain) {
     tagger.train(trainFile, devFile, testFile, modelFile, optionFile);
   } else {

@@ -43,6 +43,9 @@ public:
 
 	void exportCheckGradParams(CheckGrad& checkgrad) {
 		checkgrad.add(&(olayer_linear.W), "olayer_linear.W");
+		checkgrad.add(&(grnn_layer._rnn.W1), "grnn_layer._rnn.W1");
+		checkgrad.add(&(grnn_layer._rnn.W2), "grnn_layer._rnn.W2");
+		checkgrad.add(&(grnn_layer._rnn.b), "grnn_layer._rnn.b");
 	}
 
 	void saveModel(){

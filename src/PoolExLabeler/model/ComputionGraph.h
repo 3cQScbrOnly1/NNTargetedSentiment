@@ -56,16 +56,60 @@ public:
 	}
 
 public:
-	inline void initial(ModelParams& model_params, HyperParams& hyper_params) {
+	inline void initial(ModelParams& model_params, HyperParams& hyper_params, AlignedMemoryPool *mem = NULL) {
 		for (int idx = 0; idx < _word_inputs.size(); idx++)
+		{
 			_word_inputs[idx].setParam(&model_params.words);
+			_word_inputs[idx].init(hyper_params.wordDim, hyper_params.dropOut, mem);
+		}
 		windowOutputSize = hyper_params.windowOutputSize;
-		_pooling_concat_zero.val = Mat::Zero(windowOutputSize * 4, 1);
-		_word_window.setContext(hyper_params.wordContext);
+		_word_window.init(hyper_params.wordDim, hyper_params.wordContext, mem);
+		_pooling_concat_zero.init(windowOutputSize * 4, -1, mem);
+
+		_left_max_pooling.setParam(windowOutputSize);
+		_left_min_pooling.setParam(windowOutputSize);
+		_left_avg_pooling.setParam(windowOutputSize);
+		_left_std_pooling.setParam(windowOutputSize);
+		_left_max_pooling.init(windowOutputSize, -1, mem);
+		_left_min_pooling.init(windowOutputSize, -1, mem);
+		_left_avg_pooling.init(windowOutputSize, -1, mem);
+		_left_std_pooling.init(windowOutputSize, -1, mem);
+
+		_left_pooling_concat.init(windowOutputSize * 4, -1, mem);
+
+		_right_max_pooling.setParam(windowOutputSize);
+		_right_min_pooling.setParam(windowOutputSize);
+		_right_avg_pooling.setParam(windowOutputSize);
+		_right_std_pooling.setParam(windowOutputSize);
+		_right_max_pooling.init(windowOutputSize, -1, mem);
+		_right_min_pooling.init(windowOutputSize, -1, mem);
+		_right_avg_pooling.init(windowOutputSize, -1, mem);
+		_right_std_pooling.init(windowOutputSize, -1, mem);
+
+		_right_pooling_concat.init(windowOutputSize * 4, -1, mem);
+
+		_target_max_pooling.setParam(windowOutputSize);
+		_target_min_pooling.setParam(windowOutputSize);
+		_target_avg_pooling.setParam(windowOutputSize);
+		_target_std_pooling.setParam(windowOutputSize);
+		_target_max_pooling.init(windowOutputSize, -1, mem);
+		_target_min_pooling.init(windowOutputSize, -1, mem);
+		_target_avg_pooling.init(windowOutputSize, -1, mem);
+		_target_std_pooling.init(windowOutputSize, -1, mem);
+
+		_target_pooling_concat.init(windowOutputSize * 4, -1, mem);
+
+		_pooling_concat.init(windowOutputSize * 4 * 3, -1, mem);
+
 		for (int idx = 0; idx < 3; idx++)
+		{
 			_represent_transforms[idx].setParam(&model_params.represent_transform_layer);
-		_target_attention.setParam(&model_params.arg_layer, hyper_params.dropOut);
+			_represent_transforms[idx].init(hyper_params.hiddenSize, hyper_params.dropOut, mem);
+		}
+		_target_attention.init(&model_params.arg_layer, hyper_params.dropOut, mem);
+		_concat.init(hyper_params.windowOutputSize * 4 * 3 + hyper_params.hiddenSize, -1, mem);
 		_output.setParam(&model_params.olayer_linear);
+		_output.init(hyper_params.labelSize, -1, mem);
 	}
 
 public:
