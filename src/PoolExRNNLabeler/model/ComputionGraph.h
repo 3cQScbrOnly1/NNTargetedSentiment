@@ -7,7 +7,10 @@ struct ComputionGraph :Graph{
 public:
 	const static int max_sentence_length = 256;
 public:
-	vector<LookupNode> _word_inputs;
+	vector<LookupNode> _word_inputs1;
+	vector<LookupNode> _word_inputs2;
+	vector<ConcatNode> _word_concats;
+
 	WindowBuilder _word_window;
 	RNNBuilder _rnn_left;
 	RNNBuilder _rnn_right;
@@ -46,7 +49,9 @@ public:
 	}
 public:
 	inline void createNodes(int sent_length) {
-		_word_inputs.resize(sent_length);
+		_word_inputs1.resize(sent_length);
+		_word_inputs2.resize(sent_length);
+		_word_concats.resize(sent_length);
 		_word_window.resize(sent_length);
 		_rnn_left.resize(sent_length);
 		_rnn_right.resize(sent_length);
@@ -56,14 +61,25 @@ public:
 	}
 
 	inline void clear(){
-		_word_inputs.clear();
+		_word_inputs1.clear();
+		_word_inputs2.clear();
+		_word_concats.clear();
+		_word_window.clear();
+		_rnn_left.clear();
+		_rnn_right.clear();
+		_bi_rnn_concat.clear();
+		_hidden.clear();
 	}
 
 public:
 	inline void initial(ModelParams& model_params, HyperParams& hyper_params, AlignedMemoryPool *mem = NULL) {
-		for (int idx = 0; idx < _word_inputs.size(); idx++) {
-			_word_inputs[idx].setParam(&model_params.words);
-			_word_inputs[idx].init(hyper_params.wordDim, hyper_params.dropOut, mem);
+		int maxsize = _word_inputs1.size();
+		for (int idx = 0; idx < maxsize; idx++) {
+			_word_inputs1[idx].setParam(&model_params.words1);
+			_word_inputs1[idx].init(hyper_params.wordDim1, hyper_params.dropOut, mem);
+			_word_inputs2[idx].setParam(&model_params.words2);
+			_word_inputs2[idx].init(hyper_params.wordDim2, hyper_params.dropOut, mem);
+			_word_concats[idx].init(hyper_params.wordDim, -1, mem);
 			_bi_rnn_concat[idx].init(hyper_params.rnnHiddenSize * 2, -1, mem);
 		}
 		_pooling_concat_zero.init(hyper_params.hiddenSize * 4, -1, mem);
@@ -127,9 +143,11 @@ public:
 		int seq_size = features.size();
 		for (int idx = 0; idx < seq_size; idx++) {
 			const Feature& feature = features[idx];
-			_word_inputs[idx].forward(this, feature.words[0]);
+			_word_inputs1[idx].forward(this, feature.words[0]);
+			_word_inputs2[idx].forward(this, feature.words[0]);
+			_word_concats[idx].forward(this, &_word_inputs1[idx], &_word_inputs2[idx]);
 		}
-		_word_window.forward(this, getPNodes(_word_inputs, seq_size));
+		_word_window.forward(this, getPNodes(_word_concats, seq_size));
 		_rnn_left.forward(this, getPNodes(_word_window._outputs, seq_size));
 		_rnn_right.forward(this, getPNodes(_word_window._outputs, seq_size));
 		for (int idx = 0; idx < seq_size; idx++)

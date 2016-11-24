@@ -56,6 +56,8 @@ public:
 
   //embedding files
   string wordFile;
+  string wordFile1;
+  string wordFile2;
   string charFile;
   string segFile;
   vector<string> typeFiles;
@@ -99,6 +101,8 @@ public:
 	maxsegLen = 5;
 
 	wordFile = "";
+	wordFile1 = "";
+	wordFile2 = "";
 	charFile = "";
 	segFile = "";
 	typeFiles.clear();
@@ -184,6 +188,10 @@ public:
 
 	  if (pr.first == "wordFile")
 		  wordFile = pr.second;
+	  if (pr.first == "wordFile1")
+		  wordFile1 = pr.second;
+	  if (pr.first == "wordFile2")
+		  wordFile2 = pr.second;
 	  if (pr.first == "segFile")
 		  segFile = pr.second;		  
 	  if (pr.first == "charFile")
@@ -234,6 +242,8 @@ public:
 	std::cout << "maxsegLen = " << maxsegLen << std::endl;
 
 	std::cout << "wordFile = " << wordFile << std::endl;
+	std::cout << "wordFile1 = " << wordFile1 << std::endl;
+	std::cout << "wordFile2 = " << wordFile2 << std::endl;
 	std::cout << "charFile = " << charFile << std::endl;
 	std::cout << "segFile = " << segFile << std::endl;
 	for (int idx = 0; idx < typeFiles.size(); idx++) {

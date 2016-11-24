@@ -10,7 +10,9 @@ private:
 	int windowOutputSize;
 
 public:
-	vector<LookupNode> _word_inputs;
+	vector<LookupNode> _word_inputs1;
+	vector<LookupNode> _word_inputs2;
+	vector<ConcatNode> _word_concats;
 	WindowBuilder _word_window;
 
 	MaxPoolNode _left_max_pooling;
@@ -46,21 +48,30 @@ public:
 	}
 public:
 	inline void createNodes(int sent_length) {
-		_word_inputs.resize(sent_length);
+		_word_inputs1.resize(sent_length);
+		_word_inputs2.resize(sent_length);
+		_word_concats.resize(sent_length);
 		_word_window.resize(sent_length);
 		_represent_transforms.resize(3);
 	}
 
 	inline void clear(){
-		_word_inputs.clear();
+		_word_inputs1.clear();
+		_word_inputs2.clear();
+		_word_concats.clear();
+		_word_window.clear();
 	}
 
 public:
 	inline void initial(ModelParams& model_params, HyperParams& hyper_params, AlignedMemoryPool *mem = NULL) {
-		for (int idx = 0; idx < _word_inputs.size(); idx++)
+		int maxsize = _word_inputs1.size();
+		for (int idx = 0; idx < maxsize; idx++)
 		{
-			_word_inputs[idx].setParam(&model_params.words);
-			_word_inputs[idx].init(hyper_params.wordDim, hyper_params.dropOut, mem);
+			_word_inputs1[idx].setParam(&model_params.words1);
+			_word_inputs1[idx].init(hyper_params.wordDim1, hyper_params.dropOut, mem);
+			_word_inputs2[idx].setParam(&model_params.words2);
+			_word_inputs2[idx].init(hyper_params.wordDim2, hyper_params.dropOut, mem);
+			_word_concats[idx].init(hyper_params.wordDim, -1, mem);
 		}
 		windowOutputSize = hyper_params.windowOutputSize;
 		_word_window.init(hyper_params.wordDim, hyper_params.wordContext, mem);
@@ -118,9 +129,11 @@ public:
 		int seq_size = features.size();
 		for (int idx = 0; idx < seq_size; idx++) {
 			const Feature& feature = features[idx];
-			_word_inputs[idx].forward(this, feature.words[0]);
+			_word_inputs1[idx].forward(this, feature.words[0]);
+			_word_inputs2[idx].forward(this, feature.words[0]);
+			_word_concats[idx].forward(this, &_word_inputs1[idx], &_word_inputs2[idx]);
 		}
-		_word_window.forward(this, getPNodes(_word_inputs, seq_size));
+		_word_window.forward(this, getPNodes(_word_concats, seq_size));
 		vector<PNode> three_part_poolings;
 		if (left != 0)
 		{

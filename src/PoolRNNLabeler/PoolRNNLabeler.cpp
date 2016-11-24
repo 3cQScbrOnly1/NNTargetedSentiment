@@ -234,10 +234,16 @@ void Labeler::train(const string& trainFile, const string& devFile, const string
 
   word_stat[unknownkey] = m_options.wordCutOff + 1;
   m_driver._model_params.wordAlpha.initial(word_stat, m_options.wordCutOff);
-  if (m_options.wordFile != "")
-	  m_driver._model_params.words.initial(&m_driver._model_params.wordAlpha, m_options.wordFile, m_options.wordEmbFineTune);
+  if (m_options.wordFile1 != "")
+	  m_driver._model_params.words1.initial(&m_driver._model_params.wordAlpha, m_options.wordFile1, m_options.wordEmbFineTune);
   else
-	  m_driver._model_params.words.initial(&m_driver._model_params.wordAlpha, m_options.wordEmbSize, m_options.wordEmbFineTune);
+	  m_driver._model_params.words1.initial(&m_driver._model_params.wordAlpha, m_options.wordEmbSize, m_options.wordEmbFineTune);
+
+  if (m_options.wordFile2 != "")
+	  m_driver._model_params.words2.initial(&m_driver._model_params.wordAlpha, m_options.wordFile2, m_options.wordEmbFineTune);
+  else
+	  m_driver._model_params.words2.initial(&m_driver._model_params.wordAlpha, m_options.wordEmbSize, m_options.wordEmbFineTune);
+
   m_driver._hyper_params.setRequared(m_options);
   m_driver.initial();
 

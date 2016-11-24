@@ -18,6 +18,8 @@ struct HyperParams{
 	dtype adaAlpha;
 	dtype adaEps;
 
+	int wordDim1;
+	int wordDim2;
 	int wordDim;
 	int wordWindow;
 	int windowOutputSize;
