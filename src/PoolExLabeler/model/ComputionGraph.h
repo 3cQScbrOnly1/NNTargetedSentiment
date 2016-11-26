@@ -52,6 +52,22 @@ public:
 		_word_inputs2.resize(sent_length);
 		_word_concats.resize(sent_length);
 		_word_window.resize(sent_length);
+
+		_left_max_pooling.setParam(sent_length);
+		_left_min_pooling.setParam(sent_length);
+		_left_avg_pooling.setParam(sent_length);
+		_left_std_pooling.setParam(sent_length);
+
+		_right_max_pooling.setParam(sent_length);
+		_right_min_pooling.setParam(sent_length);
+		_right_avg_pooling.setParam(sent_length);
+		_right_std_pooling.setParam(sent_length);
+
+		_target_max_pooling.setParam(sent_length);
+		_target_min_pooling.setParam(sent_length);
+		_target_avg_pooling.setParam(sent_length);
+		_target_std_pooling.setParam(sent_length);
+
 		_represent_transforms.resize(3);
 	}
 
@@ -77,10 +93,7 @@ public:
 		_word_window.init(hyper_params.wordDim, hyper_params.wordContext, mem);
 		_pooling_concat_zero.init(windowOutputSize * 4, -1, mem);
 
-		_left_max_pooling.setParam(windowOutputSize);
-		_left_min_pooling.setParam(windowOutputSize);
-		_left_avg_pooling.setParam(windowOutputSize);
-		_left_std_pooling.setParam(windowOutputSize);
+
 		_left_max_pooling.init(windowOutputSize, -1, mem);
 		_left_min_pooling.init(windowOutputSize, -1, mem);
 		_left_avg_pooling.init(windowOutputSize, -1, mem);
@@ -88,10 +101,7 @@ public:
 
 		_left_pooling_concat.init(windowOutputSize * 4, -1, mem);
 
-		_right_max_pooling.setParam(windowOutputSize);
-		_right_min_pooling.setParam(windowOutputSize);
-		_right_avg_pooling.setParam(windowOutputSize);
-		_right_std_pooling.setParam(windowOutputSize);
+
 		_right_max_pooling.init(windowOutputSize, -1, mem);
 		_right_min_pooling.init(windowOutputSize, -1, mem);
 		_right_avg_pooling.init(windowOutputSize, -1, mem);
@@ -99,10 +109,6 @@ public:
 
 		_right_pooling_concat.init(windowOutputSize * 4, -1, mem);
 
-		_target_max_pooling.setParam(windowOutputSize);
-		_target_min_pooling.setParam(windowOutputSize);
-		_target_avg_pooling.setParam(windowOutputSize);
-		_target_std_pooling.setParam(windowOutputSize);
 		_target_max_pooling.init(windowOutputSize, -1, mem);
 		_target_min_pooling.init(windowOutputSize, -1, mem);
 		_target_avg_pooling.init(windowOutputSize, -1, mem);

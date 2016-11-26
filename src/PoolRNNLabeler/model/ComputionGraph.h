@@ -53,6 +53,22 @@ public:
 		_rnn_left.resize(sent_length);
 		_rnn_right.resize(sent_length);
 		_bi_rnn_concat.resize(sent_length);
+
+		_left_max_pooling.setParam(sent_length);
+		_left_min_pooling.setParam(sent_length);
+		_left_avg_pooling.setParam(sent_length);
+		_left_std_pooling.setParam(sent_length);
+
+		_right_max_pooling.setParam(sent_length);
+		_right_min_pooling.setParam(sent_length);
+		_right_avg_pooling.setParam(sent_length);
+		_right_std_pooling.setParam(sent_length);
+
+		_target_max_pooling.setParam(sent_length);
+		_target_min_pooling.setParam(sent_length);
+		_target_avg_pooling.setParam(sent_length);
+		_target_std_pooling.setParam(sent_length);
+
 		_hidden.resize(sent_length);
 	}
 
@@ -90,10 +106,6 @@ public:
 			_hidden[idx].setParam(&model_params.hidden_layer);
 			_hidden[idx].init(hyper_params.hiddenSize, hyper_params.dropOut, mem);
 		}
-		_left_max_pooling.setParam(hyper_params.hiddenSize);
-		_left_min_pooling.setParam(hyper_params.hiddenSize);
-		_left_avg_pooling.setParam(hyper_params.hiddenSize);
-		_left_std_pooling.setParam(hyper_params.hiddenSize);
 		_left_max_pooling.init(hyper_params.hiddenSize, -1, mem);
 		_left_min_pooling.init(hyper_params.hiddenSize, -1, mem);
 		_left_avg_pooling.init(hyper_params.hiddenSize, -1, mem);
@@ -101,10 +113,6 @@ public:
 
 		_left_pooling_concat.init(hyper_params.hiddenSize * 4, -1, mem);
 
-		_right_max_pooling.setParam(hyper_params.hiddenSize);
-		_right_min_pooling.setParam(hyper_params.hiddenSize);
-		_right_avg_pooling.setParam(hyper_params.hiddenSize);
-		_right_std_pooling.setParam(hyper_params.hiddenSize);
 		_right_max_pooling.init(hyper_params.hiddenSize, -1, mem);
 		_right_min_pooling.init(hyper_params.hiddenSize, -1, mem);
 		_right_avg_pooling.init(hyper_params.hiddenSize, -1, mem);
@@ -112,10 +120,6 @@ public:
 
 		_right_pooling_concat.init(hyper_params.hiddenSize * 4, -1, mem);
 
-		_target_max_pooling.setParam(hyper_params.hiddenSize);
-		_target_min_pooling.setParam(hyper_params.hiddenSize);
-		_target_avg_pooling.setParam(hyper_params.hiddenSize);
-		_target_std_pooling.setParam(hyper_params.hiddenSize);
 		_target_max_pooling.init(hyper_params.hiddenSize, -1, mem);
 		_target_min_pooling.init(hyper_params.hiddenSize, -1, mem);
 		_target_avg_pooling.init(hyper_params.hiddenSize, -1, mem);

@@ -20,7 +20,7 @@ public:
 	SoftMaxLoss loss;
 
 public:
-	bool initial(HyperParams& hyper_params){
+	bool initial(HyperParams& hyper_params, AlignedMemoryPool* mem){
 		if (words1.nVSize <= 0 || words2.nVSize <= 0 || labelAlpha.size() <= 0)
 			return false;
 		hyper_params.wordDim1 = words1.nDim;
@@ -31,9 +31,9 @@ public:
 		hyper_params.windowOutputSize = hyper_params.wordDim * hyper_params.wordWindow;
 		hyper_params.inputSize = hyper_params.hiddenSize * 3 * 4;
 
-		grnn_layer.initial(hyper_params.rnnHiddenSize, hyper_params.windowOutputSize);
-		hidden_layer.initial(hyper_params.hiddenSize, hyper_params.rnnHiddenSize * 2, true);
-		olayer_linear.initial(hyper_params.labelSize, hyper_params.inputSize, false);
+		grnn_layer.initial(hyper_params.rnnHiddenSize, hyper_params.windowOutputSize, mem);
+		hidden_layer.initial(hyper_params.hiddenSize, hyper_params.rnnHiddenSize * 2, true, mem);
+		olayer_linear.initial(hyper_params.labelSize, hyper_params.inputSize, false, mem);
 		return true;
 	}
 

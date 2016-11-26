@@ -22,7 +22,7 @@ public:
 	SoftMaxLoss loss;
 
 public:
-	bool initial(HyperParams& hyper_params){
+	bool initial(HyperParams& hyper_params, AlignedMemoryPool* mem = NULL){
 		if (words1.nVSize <= 0 || words2.nVSize <= 0 || labelAlpha.size() <= 0)
 			return false;
 		hyper_params.wordDim1 = words1.nDim;
@@ -34,11 +34,11 @@ public:
 		hyper_params.representInputSize = hyper_params.hiddenSize * 4;
 		hyper_params.inputSize = hyper_params.hiddenSize + hyper_params.representInputSize * 3;
 
-		grnn_layer.initial(hyper_params.rnnHiddenSize, hyper_params.windowOutputSize);
-		hidden_layer.initial(hyper_params.hiddenSize, hyper_params.rnnHiddenSize * 2, true);
-		represent_transform_layer.initial(hyper_params.hiddenSize, hyper_params.representInputSize, true);
-		arg_layer.initial(hyper_params.hiddenSize, hyper_params.hiddenSize);
-		olayer_linear.initial(hyper_params.labelSize, hyper_params.inputSize, false);
+		grnn_layer.initial(hyper_params.rnnHiddenSize, hyper_params.windowOutputSize, mem);
+		hidden_layer.initial(hyper_params.hiddenSize, hyper_params.rnnHiddenSize * 2, true, mem);
+		represent_transform_layer.initial(hyper_params.hiddenSize, hyper_params.representInputSize, true, mem);
+		arg_layer.initial(hyper_params.hiddenSize, hyper_params.hiddenSize, mem);
+		olayer_linear.initial(hyper_params.labelSize, hyper_params.inputSize, false, mem);
 		return true;
 	}
 
