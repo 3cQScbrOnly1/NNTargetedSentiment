@@ -100,8 +100,8 @@ public:
 		}
 		_pooling_concat_zero.init(hyper_params.hiddenSize * 4, -1, mem);
 		_word_window.init(hyper_params.wordDim,hyper_params.wordContext, mem);
-		_rnn_left.init(&model_params.rnn_layer, hyper_params.dropOut, true, mem);
-		_rnn_right.init(&model_params.rnn_layer, hyper_params.dropOut, false, mem);
+		_rnn_left.init(&model_params.rnn_left_layer, hyper_params.dropOut, true, mem);
+		_rnn_right.init(&model_params.rnn_right_layer, hyper_params.dropOut, false, mem);
 		for (int idx = 0; idx < _hidden.size(); idx++)
 		{
 			_hidden[idx].setParam(&model_params.hidden_layer);

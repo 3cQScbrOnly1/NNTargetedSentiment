@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 2.7 FATAL_ERROR)
 set (EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DEIGEN_FAST_MATH")
-add_definitions(-USE_FLOAT)
+#add_definitions(-USE_FLOAT)
 
 
 if(CMAKE_BUILD_TYPE MATCHES Debug)

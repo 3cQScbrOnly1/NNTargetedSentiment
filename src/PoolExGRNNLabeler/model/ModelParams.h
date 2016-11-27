@@ -10,7 +10,8 @@ public:
 
 	UniParams represent_transform_layer;
 	AttRecursiveGatedParams arg_layer;
-	GRNNParams grnn_layer;
+	GRNNParams grnn_left_layer;
+	GRNNParams grnn_right_layer;
 	UniParams hidden_layer;
 	UniParams olayer_linear;
 public:
@@ -34,7 +35,8 @@ public:
 		hyper_params.representInputSize = hyper_params.hiddenSize * 4;
 		hyper_params.inputSize = hyper_params.hiddenSize + hyper_params.representInputSize * 3;
 
-		grnn_layer.initial(hyper_params.rnnHiddenSize, hyper_params.windowOutputSize, mem);
+		grnn_left_layer.initial(hyper_params.rnnHiddenSize, hyper_params.windowOutputSize, mem);
+		grnn_right_layer.initial(hyper_params.rnnHiddenSize, hyper_params.windowOutputSize, mem);
 		hidden_layer.initial(hyper_params.hiddenSize, hyper_params.rnnHiddenSize * 2, true, mem);
 		represent_transform_layer.initial(hyper_params.hiddenSize, hyper_params.representInputSize, true, mem);
 		arg_layer.initial(hyper_params.hiddenSize, hyper_params.hiddenSize, mem);
@@ -45,7 +47,8 @@ public:
 	void exportModelParams(ModelUpdate& ada) {
 		words1.exportAdaParams(ada);
 		words2.exportAdaParams(ada);
-		grnn_layer.exportAdaParams(ada);
+		grnn_left_layer.exportAdaParams(ada);
+		grnn_right_layer.exportAdaParams(ada);
 		hidden_layer.exportAdaParams(ada);
 		represent_transform_layer.exportAdaParams(ada);
 		arg_layer.exportAdaParams(ada);
@@ -53,9 +56,12 @@ public:
 	}
 
 	void exportCheckGradParams(CheckGrad& checkgrad) {
-		checkgrad.add(&(grnn_layer._rnn.W1), "grnn_layer._rnn.W1");
-		checkgrad.add(&(grnn_layer._rnn.W2), "grnn_layer._rnn.W2");
-		checkgrad.add(&(grnn_layer._rnn.b), "grnn_layer._rnn.b");
+		checkgrad.add(&(grnn_left_layer._rnn.W1), "grnn_left_layer._rnn.W1");
+		checkgrad.add(&(grnn_left_layer._rnn.W2), "grnn_left_layer._rnn.W2");
+		checkgrad.add(&(grnn_left_layer._rnn.b), "grnn_left_layer._rnn.b");
+		checkgrad.add(&(grnn_right_layer._rnn.W1), "grnn_right_layer._rnn.W1");
+		checkgrad.add(&(grnn_right_layer._rnn.W2), "grnn_right_layer._rnn.W2");
+		checkgrad.add(&(grnn_right_layer._rnn.b), "grnn_right_layer._rnn.b");
 		checkgrad.add(&(represent_transform_layer.W), "represent_transform_layer.W");
 		checkgrad.add(&(arg_layer._update_left_param.W1), "arg_layer._update_left.W1");
 		checkgrad.add(&(arg_layer._update_left_param.W2), "arg_layer._update_left.W2");

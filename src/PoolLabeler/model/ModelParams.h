@@ -40,6 +40,8 @@ public:
 	}
 
 	void exportCheckGradParams(CheckGrad& checkgrad) {
+		//checkgrad.add(&words1.E, "words1.E");
+		//checkgrad.add(&words2.E, "words2.E");
 		checkgrad.add(&(olayer_linear.W), "olayer_linear.W");
 	}
 

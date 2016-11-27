@@ -8,7 +8,8 @@ public:
 	LookupTable words1;
 	LookupTable words2;
 
-	GRNNParams grnn_layer;
+	GRNNParams grnn_left_layer;
+	GRNNParams grnn_right_layer;
 	UniParams hidden_layer;
 	UniParams olayer_linear;
 public:
@@ -31,7 +32,8 @@ public:
 		hyper_params.windowOutputSize = hyper_params.wordDim * hyper_params.wordWindow;
 		hyper_params.inputSize = hyper_params.hiddenSize * 3 * 4;
 
-		grnn_layer.initial(hyper_params.rnnHiddenSize, hyper_params.windowOutputSize, mem);
+		grnn_left_layer.initial(hyper_params.rnnHiddenSize, hyper_params.windowOutputSize, mem);
+		grnn_right_layer.initial(hyper_params.rnnHiddenSize, hyper_params.windowOutputSize, mem);
 		hidden_layer.initial(hyper_params.hiddenSize, hyper_params.rnnHiddenSize * 2, true, mem);
 		olayer_linear.initial(hyper_params.labelSize, hyper_params.inputSize, false, mem);
 		return true;
@@ -40,16 +42,20 @@ public:
 	void exportModelParams(ModelUpdate& ada) {
 		words1.exportAdaParams(ada);
 		words2.exportAdaParams(ada);
-		grnn_layer.exportAdaParams(ada);
+		grnn_left_layer.exportAdaParams(ada);
+		grnn_right_layer.exportAdaParams(ada);
 		hidden_layer.exportAdaParams(ada);
 		olayer_linear.exportAdaParams(ada);
 	}
 
 	void exportCheckGradParams(CheckGrad& checkgrad) {
 		checkgrad.add(&(olayer_linear.W), "olayer_linear.W");
-		checkgrad.add(&(grnn_layer._rnn.W1), "grnn_layer._rnn.W1");
-		checkgrad.add(&(grnn_layer._rnn.W2), "grnn_layer._rnn.W2");
-		checkgrad.add(&(grnn_layer._rnn.b), "grnn_layer._rnn.b");
+		checkgrad.add(&(grnn_left_layer._rnn.W1), "grnn_left_layer._rnn.W1");
+		checkgrad.add(&(grnn_left_layer._rnn.W2), "grnn_left_layer._rnn.W2");
+		checkgrad.add(&(grnn_left_layer._rnn.b), "grnn_left_layer._rnn.b");
+		checkgrad.add(&(grnn_right_layer._rnn.W1), "grnn_right_layer._rnn.W1");
+		checkgrad.add(&(grnn_right_layer._rnn.W2), "grnn_right_layer._rnn.W2");
+		checkgrad.add(&(grnn_right_layer._rnn.b), "grnn_right_layer._rnn.b");
 	}
 
 	void saveModel(){

@@ -8,7 +8,8 @@ public:
 	LookupTable words1;
 	LookupTable words2;
 
-	RNNParams rnn_layer;
+	RNNParams rnn_left_layer;
+	RNNParams rnn_right_layer;
 	UniParams hidden_layer;
 	UniParams olayer_linear;
 public:
@@ -31,7 +32,8 @@ public:
 		hyper_params.windowOutputSize = hyper_params.wordDim * hyper_params.wordWindow;
 		hyper_params.inputSize = hyper_params.hiddenSize * 3 * 4;
 
-		rnn_layer.initial(hyper_params.rnnHiddenSize, hyper_params.windowOutputSize, mem);
+		rnn_left_layer.initial(hyper_params.rnnHiddenSize, hyper_params.windowOutputSize, mem);
+		rnn_right_layer.initial(hyper_params.rnnHiddenSize, hyper_params.windowOutputSize, mem);
 		hidden_layer.initial(hyper_params.hiddenSize, hyper_params.rnnHiddenSize * 2, true, mem);
 		olayer_linear.initial(hyper_params.labelSize, hyper_params.inputSize, false, mem);
 		return true;
@@ -40,7 +42,8 @@ public:
 	void exportModelParams(ModelUpdate& ada) {
 		words1.exportAdaParams(ada);
 		words2.exportAdaParams(ada);
-		rnn_layer.exportAdaParams(ada);
+		rnn_left_layer.exportAdaParams(ada);
+		rnn_right_layer.exportAdaParams(ada);
 		hidden_layer.exportAdaParams(ada);
 		olayer_linear.exportAdaParams(ada);
 	}
